@@ -25,6 +25,7 @@ app.use(express.json())
 app.get('/',(req,res)=>{
     res.send("Server okey")
 })
+
 //Ruta Administrador
 app.use('/api/',routerAdministrador)
 

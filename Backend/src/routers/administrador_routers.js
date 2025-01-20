@@ -1,6 +1,7 @@
 import {Router} from 'express'
 import { actualizarPerfil, cambiarPassword, comprobarTokenPassword, confirmEmail, login, nuevoPassword, perfilUsuario, recuperarPassword, registro } from '../controllers/administrador_controller.js'
-import { verificarAutenticacion } from '../helpers/crearJWT.js'
+import verificarAutenticacion from '../middlewares/autenticacion.js'
+
 const router = Router()
         //Rutas Públicas
 //Ruta para Registro
@@ -17,7 +18,8 @@ router.get('/recuperar-password/:token',comprobarTokenPassword)
 router.post('/nuevo-password/:token',nuevoPassword)
 
         //Rutas Prvadas
-router.get('/perfiladmin',verificarAutenticacion ,perfilUsuario)
-router.put('/actualiza-perfil/:id',verificarAutenticacion ,actualizarPerfil)
+router.get('/perfil-admin',verificarAutenticacion,perfilUsuario)
+router.put('/actualizar-perfil/:id',verificarAutenticacion ,actualizarPerfil)
 router.put('/cambiar-password/:id',verificarAutenticacion ,cambiarPassword)
+
 export default router

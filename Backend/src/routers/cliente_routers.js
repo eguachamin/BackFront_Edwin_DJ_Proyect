@@ -1,6 +1,7 @@
 import {Router} from "express"
 import { actualizarCliente, detalleCliente, eliminarCliente, listarClientes, loginCliente,  perfilCliente, registrarCliente } from "../controllers/cliente_controller.js"
-import { verificarAutenticacion } from "../helpers/crearJWT.js"
+import verificarAutenticacion from '../middlewares/autenticacion.js'
+
 const router = Router() 
 //Para la realización de las Rutas es necesario que sea en orden 
 

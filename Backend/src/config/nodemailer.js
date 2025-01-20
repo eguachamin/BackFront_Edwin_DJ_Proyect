@@ -16,13 +16,14 @@ let transporter = nodemailer.createTransport({
         pass: process.env.PASS_MAILTRAP,
     }
 });
+
 const sendMailToUser = (userMail, token) => {
 
     let mailOptions = {
         from: process.env.USER_MAILTRAP,
         to: userMail,
         subject: "Verifica tu cuenta",
-        html: `<p>Hola, haz clic <a href="${process.env.URL_BACKEND}confirmar/${encodeURIComponent(token)}">aquí</a> para confirmar tu cuenta.</p>`
+        html: `<p>Hola, haz clic <a href="${process.env.URL_FRONTEND}confirmar/${encodeURIComponent(token)}">aquí</a> para confirmar tu cuenta.</p>`
     };
     
 
@@ -34,6 +35,8 @@ const sendMailToUser = (userMail, token) => {
         }
     });
 };
+
+//  Restablecimiento de la contraseña del admi
 const sendMailToRecoveryPassword = async(userMail,token)=>{
     let info = await transporter.sendMail({
     from: 'admin@vet.com',
@@ -42,13 +45,14 @@ const sendMailToRecoveryPassword = async(userMail,token)=>{
     html: `
     <h1>Sistema de gestión (EDWIN DJ 🐶 😺)</h1>
     <hr>
-    <a href=${process.env.URL_BACKEND}recuperar-password/${token}>Clic para reestablecer tu contraseña</a>
+    <a href=${process.env.URL_FRONTEND}recuperar-password/${token}>Clic para reestablecer tu contraseña</a>
     <hr>
     <footer>Edwin DJ te da la Bienvenida!</footer>
     `
     });
     console.log("Mensaje enviado satisfactoriamente: ", info.messageId);
 }
+
 const sendMailToCliente = async(userMail,password,nombre)=>{
     let info = await transporter.sendMail({
     from: 'admin@vet.com',
