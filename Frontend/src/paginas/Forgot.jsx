@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import {Link} from 'react-router-dom'
 
+import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios'
 
 export const Forgot = () => {
@@ -23,9 +24,11 @@ export const Forgot = () => {
             const url = "http://localhost:3000/api/recuperar-password"
             const respuesta = await axios.post(url,mail)
             console.log(respuesta)
+            toast.success(respuesta.data.msg)
+            setMail("")
         } catch (error) {
             console.log(error)
-            
+            toast.error(error.response.data.msg)
         }
     }
 
@@ -33,6 +36,7 @@ export const Forgot = () => {
 
     return (
         <>
+            <ToastContainer />
             <div className="bg-white flex justify-center items-center w-1/2">
 
                 <div className="md:w-4/5 sm:w-full">

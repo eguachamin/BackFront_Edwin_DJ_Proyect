@@ -27,7 +27,7 @@ app.get('/',(req,res)=>{
 })
 
 //Ruta Administrador
-app.use('/api/',routerAdministrador)
+app.use('/api/',routerAdministrador) 
 
 //Ruta Usuario
 app.use('/api/',routerCliente)

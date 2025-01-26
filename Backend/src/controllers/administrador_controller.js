@@ -56,13 +56,13 @@ const login = async (req, res) => {
     const verificarPassword = await AdministradorBDD.matchPassword(password)
     if(!verificarPassword)return res.status(400).json({msg:"Lo sentimos el password no es correcto"})
     
-    const tokenJWT = generarJWT(AdministradorBDD._id,"Administrador") 
+    const token = generarJWT(AdministradorBDD._id,"Administrador") 
 
     const {nombre,apellido,direccion,telefono,_id}= AdministradorBDD
     
     //res.status(200).json(AdministradorBDD,tokenJWT)
     res.status(200).json({
-        tokenJWT,
+        token,
         nombre,
         apellido,
         direccion,

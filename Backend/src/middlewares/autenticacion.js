@@ -20,7 +20,7 @@ const verificarAutenticacion = async (req,res,next)=>{
             else{
                 console.log(id,rol);
                 req.cliente = await Cliente.findById(id).lean().select("-password")
-                console.log(req.usuarioBDD)
+                console.log(req.cliente)
                 next()
             }
         } catch (error) {

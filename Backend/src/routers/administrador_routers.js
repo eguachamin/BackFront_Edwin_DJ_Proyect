@@ -20,6 +20,6 @@ router.post('/nuevo-password/:token',nuevoPassword)
         //Rutas Prvadas
 router.get('/perfil-admin',verificarAutenticacion,perfilUsuario)
 router.put('/actualizar-perfil/:id',verificarAutenticacion ,actualizarPerfil)
-router.put('/cambiar-password/:id',verificarAutenticacion ,cambiarPassword)
+router.put('/cambiar-password',verificarAutenticacion ,cambiarPassword)
 
 export default router
