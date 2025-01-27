@@ -1,6 +1,8 @@
 import { sendMailToCliente } from "../config/nodemailer.js"
 import { generarJWT } from "../helpers/crearJWT.js"
 import Cliente from "../models/cliente.js"
+import mongoose from "mongoose"
+
 
 const loginCliente = async (req,res)=>{
     const {email,password} = req.body
@@ -12,12 +14,11 @@ const loginCliente = async (req,res)=>{
     const token = generarJWT(clienteBDD._id,"Cliente")
 	const {nombre,email:emailP,celular,convencional,_id} = clienteBDD
     res.status(200).json({
-        
+        token,
         nombre,
         emailP,
         celular,
         convencional,
-        token,
         _id
     })
 }
@@ -35,21 +36,15 @@ const listarClientes = async(req,res)=>{
 }
 
 const detalleCliente = async (req,res)=>{
-    try {
-        const { id } = req.params;
-        //console.log('ID recibido:', id); // Para verificar que el ID llegue correctamente
 
-        const cliente = await Cliente.findById(id).select('-createdAt -updatedAt -__v');
+    const { id } = req.params
+    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({ msg: `Lo sentimos, no existe el veterinario ${id}` });
+    const cliente = await Cliente.findById(id).select("-createdAt -updatedAt -__v")
+    
+    res.status(200).json({
+        cliente
         
-        if (!cliente) {
-            return res.status(404).json({ msg: `El cliente con ID ${id} no existe.` });
-        }
-
-        res.status(200).json(cliente);
-    } catch (error) {
-        console.error('Error al buscar el cliente:', error);
-        res.status(500).json({ msg: 'Error al obtener el cliente', error });
-    }
+    })
 }
 
 const registrarCliente = async(req,res)=>{
@@ -75,19 +70,31 @@ const registrarCliente = async(req,res)=>{
 const actualizarCliente = async (req,res)=>{
     const {id} = req.params
     if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
-    const cliente = await Cliente.findById(id).select('-createdAt -updatedAt -__v');
-    if( !cliente ) return res.status(404).json({msg:`Lo sentimos, no existe el cliente ${id}`});
-    await Cliente.findByIdAndUpdate(req.params.id,req.body)
-    res.status(200).json({msg:"Se actualizaron correctamente sus datos"})
+    
+    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({ msg: `Lo sentimos, no existe el cliente ${id}` });
+
+    await Cliente.findByIdAndUpdate(req.params.id, req.body)
+    
+    res.status(200).json({ msg: "Actualización exitosa del cliente" })
 }
 
 const eliminarCliente =async (req,res)=>{
-    const {id} = req.params
-    const cliente = await Cliente.findById(id).select('-createdAt -updatedAt -__v');
-    if( !cliente ) return res.status(404).json({msg:`Lo sentimos, no existe el cliente ${id}`});
-    await Cliente.findByIdAndUpdate(req.params.id,{email:null,estado:false})
-    res.status(200).json({msg:"Su cuenta se encuentra elimanada"})
-}
+    const { id } = req.params
+
+    if (Object.values(req.body).includes("")) return res.status(400).json({ msg: "Lo sentimos, debes llenar todos los campos" })
+
+    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({ msg: `Lo sentimos, no existe el cliente ${id}` })
+    
+    try {
+        // Solo actualizar el estado a 'false' (marcar como eliminado)
+        await Cliente.findByIdAndUpdate(id, { estado: false });
+    
+        res.status(200).json({ msg: "Cliente eliminado exitosamente" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: "Hubo un error al intentar eliminar al cliente" });
+        }
+    }
 
 export {
 	loginCliente,
